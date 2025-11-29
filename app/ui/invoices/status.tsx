@@ -15,7 +15,7 @@ export default function InvoiceStatus({ status }: { status: string }) {
     >
       {status === 'issued' ? (
         <>
-          IssuedC
+          Issued
           <CalculatorIcon className="ml-1 w-4 text-gray-500" />
         </>
       ) : null}
