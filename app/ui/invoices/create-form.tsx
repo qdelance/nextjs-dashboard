@@ -1,16 +1,18 @@
 import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
+  CalculatorIcon,
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
+import { createInvoice } from "@/app/lib/actions";
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
   return (
-    <form>
+    <form action={createInvoice}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -66,6 +68,21 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
+                  id="issued"
+                  name="status"
+                  type="radio"
+                  value="issued"
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <label
+                  htmlFor="issued"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                >
+                  Issued <CalculatorIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
                   id="pending"
                   name="status"
                   type="radio"
@@ -74,7 +91,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 />
                 <label
                   htmlFor="pending"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
                   Pending <ClockIcon className="h-4 w-4" />
                 </label>

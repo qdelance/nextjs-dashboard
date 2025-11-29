@@ -2,6 +2,7 @@
 
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
+  CalculatorIcon,
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
@@ -9,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { updateInvoice } from "@/app/lib/actions";
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,8 +19,12 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+
+  // https://www.reddit.com/r/nextjs/comments/189u2dr/why_is_bind_used_with_server_actions/
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
   return (
-    <form>
+    <form action={updateInvoiceWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -75,6 +81,22 @@ export default function EditInvoiceForm({
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
+                  id="issued"
+                  name="status"
+                  type="radio"
+                  value="issued"
+                  defaultChecked={invoice.status === 'pending'}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <label
+                  htmlFor="issued"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                >
+                  Issued <CalculatorIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
                   id="pending"
                   name="status"
                   type="radio"
@@ -84,7 +106,7 @@ export default function EditInvoiceForm({
                 />
                 <label
                   htmlFor="pending"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
                   Pending <ClockIcon className="h-4 w-4" />
                 </label>
