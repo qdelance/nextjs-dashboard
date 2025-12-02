@@ -10,7 +10,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { updateInvoice } from "@/app/lib/actions";
+import { updateInvoice, State, createInvoice } from "@/app/lib/actions";
+import { useActionState } from 'react';
 
 export default function EditInvoiceForm({
   invoice,
@@ -19,12 +20,17 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
-
+  const initialState: State = { message: null, errors: {} };
   // https://www.reddit.com/r/nextjs/comments/189u2dr/why_is_bind_used_with_server_actions/
+  // https://nextjs.org/learn/dashboard-app/mutating-data#4-pass-the-id-to-the-server-action
+  // Read "Using a hidden input field in your form also works..."
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
 
+  console.log('qde invoice', invoice);
+  console.log('qde state', state);
   return (
-    <form action={updateInvoiceWithId}>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -130,6 +136,13 @@ export default function EditInvoiceForm({
             </div>
           </div>
         </fieldset>
+        <div id="customer-error" aria-live="polite" aria-atomic="true">
+          {state.message &&
+              <p className="mt-2 text-sm text-red-500">
+                {state.message}
+              </p>
+          }
+        </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
