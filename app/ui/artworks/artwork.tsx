@@ -1,11 +1,10 @@
 'use client'
 
-import { fetchArtwork } from '@/app/lib/data-collcon';
 import { useRouter } from "next/navigation";
-import { Artwork} from "@/app/lib/definitions-collcon";
+import { Artwork } from "@/app/lib/definitions-collcon";
 
 
-export default async function Artwork({
+export default async function ArtworkPage({
   artwork
 }: {
   artwork: Artwork;
