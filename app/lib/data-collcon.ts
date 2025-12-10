@@ -14,13 +14,22 @@ export async function fetchArtwork(
 
     const record = data.records.record.data.Record;
 
-    let image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
-
     // gruik
-    if (image2.startsWith('Icono\\iconotheque\\')) {
-      image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
-    } else if (image2.startsWith('Icono\\iconomedia\\')) {
-      image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+    let image2: string;
+    if (record.source == 'icono') {
+      image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
+      if (image2.startsWith('Icono\\iconotheque\\')) {
+        image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
+      } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
+        image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
+      } else if (image2.startsWith('Icono\\iconomedia\\')) {
+        image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+      }
+    } else {
+      image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
+      if (image2.startsWith('Objets\\')) {
+        image2 = image2.replace('Objets\\', 'img/media\\');
+      }
     }
     let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
 
@@ -61,14 +70,24 @@ export async function fetchFilteredArtworks(
     const artworks: Artwork[] = data.records.record.map((item: any) => {
       const record = item.data.Record;
 
-      let image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
-
       // gruik
-      if (image2.startsWith('Icono\\iconotheque\\')) {
-        image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
-      } else if (image2.startsWith('Icono\\iconomedia\\')) {
-        image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+      let image2: string;
+      if (record.source == 'icono') {
+        image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
+        if (image2.startsWith('Icono\\iconotheque\\')) {
+          image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
+        } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
+          image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
+        } else if (image2.startsWith('Icono\\iconomedia\\')) {
+          image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+        }
+      } else {
+        image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
+        if (image2.startsWith('Objets\\')) {
+          image2 = image2.replace('Objets\\', 'img/media\\');
+        }
       }
+
       let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
 
       return {
@@ -93,42 +112,18 @@ export async function fetchFilteredArtworks(
 const ITEMS_PER_PAGE = 10;
 export async function fetchArtworkPages() {
   try {
-    const response = await fetch(`https://collections.quaibranly.fr/ccProxy.ashx?action=get&command=search&query=and(*=*;and(Record/Title/Title=calebasse;or(/Record/source=objects;/Record/source=icono)))&range=1-10&responseformat=json`)
-    // const response = await fetch(`https://collections.quaibranly.fr/ccProxy.ashx?action=get&command=search&query=and(*=*;or(/Record/source=objects;/Record/source=icono))&range=1-10&responseformat=json`)
+    const response = await fetch(`https://collections.quaibranly.fr/ccProxy.ashx?action=get&command=search&query=and(*=*;or(/Record/source=objects;/Record/source=icono))&range=1-10&responseformat=json`)
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`)
     }
     const data = await response.json();
     console.log('QDE fetchArtworkPages', data);
-    return Math.ceil(data.request.count / ITEMS_PER_PAGE);
+    return {
+      nbArtworks : data.request.count,
+      nbPages: Math.ceil(data.request.count / ITEMS_PER_PAGE)
+    };
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
   }
 }
-
-/*export async function fetchInvoiceById(id: string) {
-  try {
-    const data = await sql<InvoiceForm[]>`
-      SELECT
-        invoices.id,
-        invoices.customer_id,
-        invoices.amount,
-        invoices.status
-      FROM invoices
-      WHERE invoices.id = ${id};
-    `;
-
-    const invoice = data.map((invoice) => ({
-      ...invoice,
-      // Convert amount from cents to dollars
-      amount: invoice.amount / 100,
-    }));
-
-    return invoice[0];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
-  }
-}*/
-

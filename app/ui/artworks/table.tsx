@@ -3,12 +3,16 @@ import Link from "next/link";
 
 export default async function Table({
   currentPage,
+  count,
 }: {
   currentPage: number;
+  count: number;
 }) {
   const artworks = await fetchFilteredArtworks(currentPage);
 
   return (
+    <>
+    <p>{count} résultats</p>
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
@@ -98,5 +102,6 @@ export default async function Table({
         </div>
       </div>
     </div>
+    </>
   );
 }
