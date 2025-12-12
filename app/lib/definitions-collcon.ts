@@ -30,12 +30,11 @@ export type object_altnum = {
 }
 
 export type Artwork = {
-  id: string; // ccObjectNumber
+  id: string;
+  titles: ArtworkTitle[],
   numero_gestion: string;
   numero_inventaire?: string;
   obj_altnum?: object_altnum[];
-  title_type: string;
-  title: string;
   materiaux_techniques: string,
   classification: string;
   source: 'icono' | 'objects';
@@ -49,4 +48,9 @@ export type ArtworkDescription = {
   usage: string,
   expose: boolean,
   lieu_exposition?: string
+}
+
+export type ArtworkTitle = {
+  title: string,
+  type: string,
 }

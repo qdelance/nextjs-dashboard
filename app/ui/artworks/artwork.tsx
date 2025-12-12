@@ -13,13 +13,18 @@ export default async function ArtworkPage({
 
   return (
     <div className="mt-6 flow-root">
-      <h1><strong>{artwork.title_type} : </strong>{artwork.title}</h1>
+      <h1><strong>{artwork.titles[0].type} : </strong>{artwork.titles[0].title}</h1>
 
+      {
+        artwork.titles.slice(1).map((title) => (
+          <p><strong>{title.type}</strong> : {title.title}</p>
+        ))
+      }
       <img
-        src={`${artwork.img_url}&width=200`}
+        src={`${artwork.img_url}&width=400`}
         className=""
-        width={200}
-        height={200}
+        width={400}
+        height={400}
         alt="Artwork main picture"
       />
 

@@ -25,7 +25,7 @@ export default async function Table({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{artwork.title_type} : {artwork.title}</p>
+                      <p>{artwork.titles[0].type} : {artwork.titles[0].title}</p>
                     </div>
                     <p className="text-sm text-gray-500">{artwork.source}</p>
                   </div>
@@ -75,7 +75,7 @@ export default async function Table({
                       <Link
                         href={`/dashboard/artworks/${artwork.id}`}
                         className="rounded-md border p-2 hover:bg-gray-100"
-                      >{artwork.title_type} : {artwork.title}
+                      ><p>{artwork.titles[0].type} : {artwork.titles[0].title}</p>
                       </Link>
                     </div>
                   </td>

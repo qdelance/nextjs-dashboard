@@ -1,4 +1,5 @@
-import { Artwork } from "@/app/lib/definitions-collcon";
+import { Artwork, ArtworkTitle } from "@/app/lib/definitions-collcon";
+import { forEach } from "eslint-config-next";
 
 export async function fetchArtwork(
   artworkId: string,
@@ -162,6 +163,21 @@ function getArtworkFromJSON(record: any): Artwork {
 
   let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
 
+  let titles: ArtworkTitle[] = [];
+  if (Array.isArray(record.Title)) {
+    for(const title of record.Title) {
+      titles.push({
+        title: title.Title,
+        type: title.TitleType,
+      })
+    }
+  } else {
+    titles.push({
+      title: record.Title.Title,
+      type: record.Title.TitleType,
+    })
+  }
+
   const detail = {
     description: record.Description,
     usage: record.Creditline,
@@ -173,8 +189,7 @@ function getArtworkFromJSON(record: any): Artwork {
     id: record.ccObjectID,
     numero_inventaire: record.ObjectNumber,
     numero_gestion: record.ObjectNumber2,
-    title: record.Title.Title,
-    title_type: record.Title.TitleType,
+    titles: titles,
     materiaux_techniques: record.Medium,
     detail: detail,
     classification: record.Classification,
