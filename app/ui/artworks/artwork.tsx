@@ -13,7 +13,7 @@ export default async function ArtworkPage({
 
   return (
     <div className="mt-6 flow-root">
-      <h1><strong>{artwork.titles[0].type} : </strong>{artwork.titles[0].title}</h1>
+      <h1 className="text-5xl font-bold text-heading"><strong>{artwork.titles[0].type} : </strong>{artwork.titles[0].title}</h1>
 
       {
         artwork.titles.slice(1).map((title) => (
@@ -28,7 +28,7 @@ export default async function ArtworkPage({
         alt="Artwork main picture"
       />
 
-      <h2>Champs de base</h2>
+      <h2 className="text-4xl font-bold text-heading">Champs de base</h2>
 
       <p>
         <strong>N° gestion :</strong> {artwork.numero_gestion}
@@ -44,10 +44,10 @@ export default async function ArtworkPage({
       </p>
       <p>
 
-      <h2>Détails</h2>
+      <h2 className="text-4xl font-bold text-heading">Détails</h2>
 
       <p>
-        <strong>Description :</strong> {artwork.detail.description}
+        <strong>Description :</strong>
         {/*
         Safely inserting sanitized HTML into the component
         TODO dompurify
