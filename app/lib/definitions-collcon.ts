@@ -31,13 +31,22 @@ export type object_altnum = {
 
 export type Artwork = {
   id: string; // ccObjectNumber
-  object_number2: string; // ObjectNumber2 => N° de gestion
-  object_number_unparsed?: string; // ObjectNumberUnparsed => N° d'inventaire
+  numero_gestion: string;
+  numero_inventaire?: string;
   obj_altnum?: object_altnum[];
+  title_type: string;
   title: string;
+  materiaux_techniques: string,
   classification: string;
-  description: string;
   source: 'icono' | 'objects';
   image2: string;
   img_url: string;
+  detail: ArtworkDescription
 };
+
+export type ArtworkDescription = {
+  description: string,
+  usage: string,
+  expose: boolean,
+  lieu_exposition?: string
+}

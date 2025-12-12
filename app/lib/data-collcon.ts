@@ -14,6 +14,7 @@ export async function fetchArtwork(
 
     const record = data.records.record.data.Record;
 
+    /*
     // gruik
     let image2: string;
     if (record.source == 'icono') {
@@ -45,7 +46,8 @@ export async function fetchArtwork(
       img_url: url,
     };
 
-    return artwork;
+    return artwork;*/
+    return getArtworkFromJSON(record);
 
   } catch (error) {
     console.error('Database Error:', error);
@@ -60,48 +62,58 @@ export async function fetchFilteredArtworks(
   const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const end = currentPage * ITEMS_PER_PAGE;
   try {
-    const response = await fetch(`https://collections.quaibranly.fr/ccProxy.ashx?action=get&command=search&query=or(/Record/source=objects;/Record/source=icono)&range=${start}-${end}&responseformat=json`)
+    const response = await fetch(`https://collections.quaibranly.fr/ccProxy.ashx?action=get&command=search&query=and(*=*;or(/Record/source=objects;/Record/source=icono))&range=${start}-${end}&responseformat=json`)
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`)
     }
     const data = await response.json();
     console.log('QDE fetchFilteredArtworks', data);
 
-    const artworks: Artwork[] = data.records.record.map((item: any) => {
-      const record = item.data.Record;
+    if (Array.isArray(data.records.record)) {
+      const artworks: Artwork[] = data.records.record.map((item: any) => {
+        const record = item.data.Record;
 
-      // gruik
-      let image2: string;
-      if (record.source == 'icono') {
-        image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
-        if (image2.startsWith('Icono\\iconotheque\\')) {
-          image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
-        } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
-          image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
-        } else if (image2.startsWith('Icono\\iconomedia\\')) {
-          image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+        // gruik
+        /*let image2: string;
+        if (record.source == 'icono') {
+          image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
+          if (image2.startsWith('Icono\\iconotheque\\')) {
+            image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
+          } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
+            image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
+          } else if (image2.startsWith('Icono\\iconomedia\\')) {
+            image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+          }
+        } else {
+          image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
+          if (image2.startsWith('Objets\\')) {
+            image2 = image2.replace('Objets\\', 'img/media\\');
+          }
         }
-      } else {
-        image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
-        if (image2.startsWith('Objets\\')) {
-          image2 = image2.replace('Objets\\', 'img/media\\');
-        }
-      }
 
-      let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
+        let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
 
-      return {
-        id: record.ccObjectID,
-        object_number2: record.ObjectNumber2,
-        object_number_unparsed: record.ObjectNumberUnparsed ?? null,
-        title: record.SortTitle,
-        description: record.Descripton,
-        classification: record.Classification,
-        source: record.source,
-        image2,
-        img_url: url
-    }});
-    return artworks;
+        return {
+          id: record.ccObjectID,
+          object_number2: record.ObjectNumber2,
+          object_number_unparsed: record.ObjectNumberUnparsed ?? null,
+          title: record.SortTitle,
+          description: record.Descripton,
+          classification: record.Classification,
+          source: record.source,
+          image2,
+          img_url: url
+      }*/
+
+        return getArtworkFromJSON(record);
+      });
+      return artworks;
+    } else {
+      let arworks: Artwork[] = [];
+      const arwork = getArtworkFromJSON(data.records.record);
+      arworks.push(arwork);
+      return arworks;
+    }
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
@@ -126,4 +138,48 @@ export async function fetchArtworkPages() {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
   }
+}
+
+function getArtworkFromJSON(record: any): Artwork {
+
+  // gruik
+  let image2: string;
+  if (record.source == 'icono') {
+    image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
+    if (image2.startsWith('Icono\\iconotheque\\')) {
+      image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
+    } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
+      image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
+    } else if (image2.startsWith('Icono\\iconomedia\\')) {
+      image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+    }
+  } else {
+    image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
+    if (image2.startsWith('Objets\\')) {
+      image2 = image2.replace('Objets\\', 'img/media\\');
+    }
+  }
+
+  let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
+
+  const detail = {
+    description: record.Description,
+    usage: record.Creditline,
+    expose: record.filterexpose?.filterexpose == 'expose', // A tester
+    lieu_exposition: record.ObjLocation?.LocationString,
+  };
+
+  return {
+    id: record.ccObjectID,
+    numero_inventaire: record.ObjectNumber,
+    numero_gestion: record.ObjectNumber2,
+    title: record.Title.Title,
+    title_type: record.Title.TitleType,
+    materiaux_techniques: record.Medium,
+    detail: detail,
+    classification: record.Classification,
+    source: record.source,
+    image2,
+    img_url: url
+  };
 }

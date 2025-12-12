@@ -25,7 +25,7 @@ export default async function Table({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{artwork.title}</p>
+                      <p>{artwork.title_type} : {artwork.title}</p>
                     </div>
                     <p className="text-sm text-gray-500">{artwork.source}</p>
                   </div>
@@ -33,7 +33,7 @@ export default async function Table({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {artwork.object_number2}
+                      {artwork.numero_inventaire}
                     </p>
                     <p>{artwork.classification}</p>
                   </div>
@@ -54,7 +54,10 @@ export default async function Table({
                   Source
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  IDs
+                  N° inventaire
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  N° gestion
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Classification
@@ -72,7 +75,7 @@ export default async function Table({
                       <Link
                         href={`/dashboard/artworks/${artwork.id}`}
                         className="rounded-md border p-2 hover:bg-gray-100"
-                      >{artwork.title}
+                      >{artwork.title_type} : {artwork.title}
                       </Link>
                     </div>
                   </td>
@@ -90,7 +93,10 @@ export default async function Table({
                     {artwork.source}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {artwork.object_number2} {artwork.object_number_unparsed && <p>{artwork.object_number_unparsed}</p>}
+                    {artwork.numero_inventaire}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {artwork.numero_gestion}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {artwork.classification}

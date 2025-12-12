@@ -13,27 +13,62 @@ export default async function ArtworkPage({
 
   return (
     <div className="mt-6 flow-root">
+      <h1><strong>{artwork.title_type} : </strong>{artwork.title}</h1>
+
+      <img
+        src={`${artwork.img_url}&width=200`}
+        className=""
+        width={200}
+        height={200}
+        alt="Artwork main picture"
+      />
+
+      <h2>Champs de base</h2>
+
       <p>
-        <strong>Title :</strong> {artwork.title}
+        <strong>N° gestion :</strong> {artwork.numero_gestion}
       </p>
       <p>
-        <strong>N° gestion :</strong> {artwork.object_number2}
+        <strong>N° inventaire :</strong> {artwork.numero_inventaire}
       </p>
       <p>
-        <strong>N° inventaire :</strong> {artwork.object_number_unparsed}
+        <strong>Matériaux et techniques :</strong> {artwork.materiaux_techniques}
       </p>
       <p>
         <strong>Classification :</strong> {artwork.classification}
       </p>
       <p>
-      <strong>Description :</strong> {artwork.description}
+
+      <h2>Détails</h2>
+
+      <p>
+        <strong>Description :</strong> {artwork.detail.description}
         {/*
         Safely inserting sanitized HTML into the component
         TODO dompurify
         https://docureacten.github.io/Rendering/6-4-Safely%20Using%20Raw%20HTML
         */}
-        <span dangerouslySetInnerHTML={{ __html: artwork.description }} />
+        <span dangerouslySetInnerHTML={{ __html: artwork.detail.description }} />
       </p>
+
+      <p>
+        <strong>Usage :</strong> {artwork.detail.usage}
+        <span dangerouslySetInnerHTML={{ __html: artwork.detail.usage }} />
+      </p>
+
+      <p><strong>Exposé ? </strong> {artwork.detail.expose ? 'Oui': 'Non'}</p>
+
+      {
+        artwork.detail.expose &&
+        <p>
+          <strong>Lieu d'exposition :</strong> {artwork.detail.lieu_exposition}
+        </p>
+      }
+
+      <p>
+        <strong>Matériaux et techniques :</strong> {artwork.materiaux_techniques}
+      </p>
+    </p>
 
       <button
         type="button"
