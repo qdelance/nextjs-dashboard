@@ -15,39 +15,6 @@ export async function fetchArtwork(
 
     const record = data.records.record.data.Record;
 
-    /*
-    // gruik
-    let image2: string;
-    if (record.source == 'icono') {
-      image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
-      if (image2.startsWith('Icono\\iconotheque\\')) {
-        image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
-      } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
-        image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
-      } else if (image2.startsWith('Icono\\iconomedia\\')) {
-        image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
-      }
-    } else {
-      image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
-      if (image2.startsWith('Objets\\')) {
-        image2 = image2.replace('Objets\\', 'img/media\\');
-      }
-    }
-    let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
-
-    const artwork: Artwork = {
-      id: record.ccObjectID,
-      object_number2: record.ObjectNumber2,
-      object_number_unparsed: record.ObjectNumberUnparsed ?? null,
-      title: record.SortTitle,
-      description: record.Description,
-      classification: record.Classification,
-      source: record.source,
-      image2,
-      img_url: url,
-    };
-
-    return artwork;*/
     return getArtworkFromJSON(record);
 
   } catch (error) {
@@ -144,25 +111,28 @@ function getArtworkFromJSON(record: any): Artwork {
     }
   }
 
-    const detail = {
-      description: record.Description,
-      usage: record.Creditline,
-      expose: record.filterexpose?.filterexpose == 'expose', // A tester
-      lieu_exposition: record.ObjLocation?.LocationString,
-  };
-
   return {
     id: record.ccObjectID,
-    numero_inventaire: record.ObjectNumber,
-    numero_gestion: record.ObjectNumber2,
     titles: titles,
-    materiaux_techniques: record.Medium,
-    detail: detail,
-    classification: record.Classification,
     source: record.source,
+    classification: record.Classification,
+    // 1. Présentation globale
     image2,
     img_url: url,
-    extra_images: extra_images
+    extra_images: extra_images,
+    date: record.Dated,
+    lieu_exposition: record.ObjLocation?.LocationString,
+    expose: record.filterexpose?.filterexpose == 'expose', // A tester
+    numero_gestion: record.ObjectNumber2,
+    numero_inventaire: record.ObjectNumber,
+    description: record.Description,
+    usage: record.Creditline,
+    // 2. Détail de l'oeuvre
+    materiaux_techniques: record.Medium,
+    dimensions: record.Dimensions,
+    signature: record.Signed,
+    inscription: record.Inscribed,
+    // TODO obj_altnum
   };
 }
 

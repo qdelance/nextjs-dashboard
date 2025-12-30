@@ -15,11 +15,11 @@ export default async function ArtworkPage({
     <div className="mt-6 flow-root">
       <h1 className="text-5xl font-bold text-heading"><strong>{artwork.titles[0].type} : </strong>{artwork.titles[0].title}</h1>
 
-      {
+      {/*
         artwork.titles.slice(1).map((title) => (
           <p><strong>{title.type}</strong> : {title.title}</p>
         ))
-      }
+      */}
       <img
         src={`${artwork.img_url}&width=400`}
         className=""
@@ -42,52 +42,69 @@ export default async function ArtworkPage({
       }
       </div>
 
-      <h2 className="text-4xl font-bold text-heading">Champs de base</h2>
+      <h2 className="text-4xl font-bold text-heading">1. Présentation globale</h2>
 
+      {
+        artwork.titles.map((title) => (
+          <p><strong>{title.type} : </strong>{title.title}</p>
+        ))
+      }
+
+      <p><strong>Date : </strong>{artwork.date}</p>
+
+      {
+        artwork.lieu_exposition &&
+        <p>
+          <strong>Lieu d'exposition :</strong> {artwork.lieu_exposition}
+        </p>
+      }
+
+      <p><strong>Exposé ? </strong>{artwork.expose ? 'Oui': 'Non'}</p>
       <p>
-        <strong>N° gestion :</strong> {artwork.numero_gestion}
+        <strong>N° inventaire : </strong>{artwork.numero_inventaire}
       </p>
       <p>
-        <strong>N° inventaire :</strong> {artwork.numero_inventaire}
+        <strong>N° gestion : </strong>{artwork.numero_gestion}
       </p>
       <p>
-        <strong>Matériaux et techniques :</strong> {artwork.materiaux_techniques}
+        <strong>Matériaux et techniques : </strong>{artwork.materiaux_techniques}
       </p>
-      <p>
+      {/*<p>
         <strong>Classification :</strong> {artwork.classification}
-      </p>
-      <p>
-
-      <h2 className="text-4xl font-bold text-heading">Détails</h2>
+      </p>*/}
 
       <p>
-        <strong>Description :</strong>
+        <strong>Description : </strong>
         {/*
         Safely inserting sanitized HTML into the component
         TODO dompurify
         https://docureacten.github.io/Rendering/6-4-Safely%20Using%20Raw%20HTML
         */}
-        <span dangerouslySetInnerHTML={{ __html: artwork.detail.description }} />
+        <span dangerouslySetInnerHTML={{ __html: artwork.description }} />
       </p>
 
       <p>
-        <strong>Usage :</strong> {artwork.detail.usage}
-        <span dangerouslySetInnerHTML={{ __html: artwork.detail.usage }} />
+        <strong>Usage : </strong>{artwork.usage}
+        <span dangerouslySetInnerHTML={{ __html: artwork.usage }} />
       </p>
 
-      <p><strong>Exposé ? </strong> {artwork.detail.expose ? 'Oui': 'Non'}</p>
-
-      {
-        artwork.detail.expose &&
-        <p>
-          <strong>Lieu d'exposition :</strong> {artwork.detail.lieu_exposition}
-        </p>
-      }
+      <h2 className="text-4xl font-bold text-heading">2. Détails de l'oeuvre</h2>
 
       <p>
-        <strong>Matériaux et techniques :</strong> {artwork.materiaux_techniques}
+        <strong>Matériaux et techniques : </strong>{artwork.materiaux_techniques}
       </p>
-    </p>
+
+      <p>
+        <strong>Dimensions : </strong>{artwork.dimensions}
+      </p>
+
+      <p>
+        <strong>Signature : </strong>{artwork.signature}
+      </p>
+
+      <p>
+        <strong>Inscription : </strong>{artwork.inscription}
+      </p>
 
       <button
         type="button"

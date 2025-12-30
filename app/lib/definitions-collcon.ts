@@ -32,24 +32,28 @@ export type object_altnum = {
 export type Artwork = {
   id: string;
   titles: ArtworkTitle[],
-  numero_gestion: string;
-  numero_inventaire?: string;
-  obj_altnum?: object_altnum[];
-  materiaux_techniques: string,
-  classification: string;
   source: 'icono' | 'objects';
+  classification: string;
+
+  // 1. Présentation globale
   image2: string;
   img_url: string;
   extra_images: ArtworkImage[],
-  detail: ArtworkDescription
-};
-
-export type ArtworkDescription = {
+  date: string,
+  lieu_exposition?: string
+  expose: boolean,
+  numero_gestion: string;
+  numero_inventaire?: string;
   description: string,
   usage: string,
-  expose: boolean,
-  lieu_exposition?: string
-}
+
+  // 2. Détail de l'oeuvre
+  materiaux_techniques: string,
+  dimensions: string,
+  signature: string,
+  inscription: string,
+  obj_altnum?: object_altnum[];
+};
 
 export type ArtworkTitle = {
   title: string,
