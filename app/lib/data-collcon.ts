@@ -1,4 +1,4 @@
-import { AncienNumero, Artwork, ArtworkImage, ArtworkTitle } from "@/app/lib/definitions-collcon";
+import { AncienNumero, Artwork, ArtworkImage, ArtworkTitle, Person } from "@/app/lib/definitions-collcon";
 import { forEach } from "eslint-config-next";
 
 export async function fetchArtwork(
@@ -128,6 +128,51 @@ function getArtworkFromJSON(record: any): Artwork {
     }
   }
 
+  let people: Person[] = [];
+  if (record.ConX) {
+    if (Array.isArray(record.ConX)) {
+      for (const p of record.ConX) {
+        people.push({
+          display_name: p.DisplayName,
+          display_date: p.DisplayDate,
+          role_id: p.RoleID,
+          role_type_id: p.RoleTypeID,
+          role: p.Role,
+        })
+      }
+    } else {
+      people.push({
+        display_name: record.ConX.DisplayName,
+        display_date: record.ConX.DisplayDate,
+        role_id: record.ConX.RoleID,
+        role_type_id: record.ConX.RoleTypeID,
+        role: record.ConX.Role,
+      })
+    }
+  }
+
+  let people2: Person[] = [];
+  if (record.ConXother) {
+    if (Array.isArray(record.ConXother)) {
+      for (const p of record.ConXother) {
+        people2.push({
+          display_name: p.DisplayName,
+          display_date: p.DisplayDate,
+          role_id: p.RoleID,
+          role_type_id: p.RoleTypeID,
+          role: p.Role,
+        })
+      }
+    } else {
+      people2.push({
+        display_name: record.ConXother.DisplayName,
+        display_date: record.ConXother.DisplayDate,
+        role_id: record.ConXother.RoleID,
+        role_type_id: record.ConXother.RoleTypeID,
+        role: record.ConXother.Role,
+      })
+    }
+  }
 
   return {
     id: record.ccObjectID,
@@ -150,7 +195,10 @@ function getArtworkFromJSON(record: any): Artwork {
     dimensions: record.Dimensions,
     signature: record.Signed,
     inscription: record.Inscribed,
-    anciens_numeros
+    anciens_numeros,
+    // 3. Personnes
+    people,
+    people2
   };
 }
 

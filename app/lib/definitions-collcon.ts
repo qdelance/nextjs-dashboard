@@ -29,6 +29,14 @@ export type AncienNumero = {
   numero: string; // Altnum
 }
 
+export type Person = {
+  display_name: string;
+  display_date: string;
+  role_id: string;
+  role_type_id: string;
+  role: string;
+}
+
 export type Artwork = {
   id: string;
   titles: ArtworkTitle[],
@@ -53,6 +61,10 @@ export type Artwork = {
   signature: string,
   inscription: string,
   anciens_numeros?: AncienNumero[];
+
+  // 3. Personnes
+  people?: Person[]; // ConX
+  people2?: Person[]; // ConXother
 };
 
 export type ArtworkTitle = {

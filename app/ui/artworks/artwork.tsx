@@ -119,6 +119,36 @@ export default async function ArtworkPage({
         }
       </p>
 
+      <h2 className="text-4xl font-bold text-heading">3. Personnes (en attendant mieux)</h2>
+
+      <h3 className="text-2xl font-bold text-heading">ConX</h3>
+
+      <p>
+        {
+          artwork.people?.map((person, idx) => (
+            <p key={`person-${idx}`}><strong>{person.role} : </strong>
+              {person.display_name}
+              {person.display_date && ` (${person.display_date})`}<br/>
+              Debug role ID={person.role_id} role type ID={person.role_type_id}
+            </p>
+          ))
+        }
+      </p>
+
+      <h3 className="text-2xl font-bold text-heading">ConXother</h3>
+
+      <p>
+        {
+          artwork.people2?.map((person, idx) => (
+            <p key={`person2-${idx}`}><strong>{person.role} : </strong>
+              {person.display_name}
+              {person.display_date && ` (${person.display_date})`}<br/>
+              Debug role ID={person.role_id} role type ID={person.role_type_id}
+            </p>
+          ))
+        }
+      </p>
+
       <button
         type="button"
         className="flex h-10 items-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
