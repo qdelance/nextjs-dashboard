@@ -40,6 +40,7 @@ export type Artwork = {
   source: 'icono' | 'objects';
   image2: string;
   img_url: string;
+  extra_images: ArtworkImage[],
   detail: ArtworkDescription
 };
 
@@ -53,4 +54,9 @@ export type ArtworkDescription = {
 export type ArtworkTitle = {
   title: string,
   type: string,
+}
+
+export type ArtworkImage = {
+  image2: string,
+  url: string,
 }

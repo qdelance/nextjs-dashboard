@@ -1,4 +1,4 @@
-import { Artwork, ArtworkTitle } from "@/app/lib/definitions-collcon";
+import { Artwork, ArtworkImage, ArtworkTitle } from "@/app/lib/definitions-collcon";
 import { forEach } from "eslint-config-next";
 
 export async function fetchArtwork(
@@ -74,38 +74,6 @@ export async function fetchFilteredArtworks(
       const artworks: Artwork[] = data.records.record.map((item: any) => {
         const record = item.data.Record;
 
-        // gruik
-        /*let image2: string;
-        if (record.source == 'icono') {
-          image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
-          if (image2.startsWith('Icono\\iconotheque\\')) {
-            image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
-          } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
-            image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
-          } else if (image2.startsWith('Icono\\iconomedia\\')) {
-            image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
-          }
-        } else {
-          image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
-          if (image2.startsWith('Objets\\')) {
-            image2 = image2.replace('Objets\\', 'img/media\\');
-          }
-        }
-
-        let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
-
-        return {
-          id: record.ccObjectID,
-          object_number2: record.ObjectNumber2,
-          object_number_unparsed: record.ObjectNumberUnparsed ?? null,
-          title: record.SortTitle,
-          description: record.Descripton,
-          classification: record.Classification,
-          source: record.source,
-          image2,
-          img_url: url
-      }*/
-
         return getArtworkFromJSON(record);
       });
       return artworks;
@@ -121,7 +89,6 @@ export async function fetchFilteredArtworks(
   }
 }
 
-// 10 items per page in SWAPI API
 const ITEMS_PER_PAGE = 10;
 export async function fetchArtworkPages() {
   try {
@@ -142,26 +109,8 @@ export async function fetchArtworkPages() {
 }
 
 function getArtworkFromJSON(record: any): Artwork {
-
-  // gruik
-  let image2: string;
-  if (record.source == 'icono') {
-    image2 = record.IImages?.image2 ?? 'noimage/pas-dimage-white.png';
-    if (image2.startsWith('Icono\\iconotheque\\')) {
-      image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
-    } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
-      image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
-    } else if (image2.startsWith('Icono\\iconomedia\\')) {
-      image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
-    }
-  } else {
-    image2 = record.Image?.image2 ?? 'noimage/pas-dimage-white.png';
-    if (image2.startsWith('Objets\\')) {
-      image2 = image2.replace('Objets\\', 'img/media\\');
-    }
-  }
-
-  let url = `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
+  let image2 = record.source == 'icono' ? record.IImages?.image2 : record.Image?.image2;
+  const url = getImageURLFromImage2Field(image2);
 
   let titles: ArtworkTitle[] = [];
   if (Array.isArray(record.Title)) {
@@ -178,11 +127,28 @@ function getArtworkFromJSON(record: any): Artwork {
     })
   }
 
-  const detail = {
-    description: record.Description,
-    usage: record.Creditline,
-    expose: record.filterexpose?.filterexpose == 'expose', // A tester
-    lieu_exposition: record.ObjLocation?.LocationString,
+  let extra_images: ArtworkImage[] = []
+  if (record.ImagesMore) {
+    if (Array.isArray(record.ImagesMore)) {
+      for (const image of record.ImagesMore) {
+        extra_images.push({
+          image2: image.image2,
+          url: getImageURLFromImage2Field(image.image2),
+        })
+      }
+    } else {
+      extra_images.push({
+        image2: record.ImagesMore.image2,
+        url: getImageURLFromImage2Field(record.ImagesMore.image2),
+      })
+    }
+  }
+
+    const detail = {
+      description: record.Description,
+      usage: record.Creditline,
+      expose: record.filterexpose?.filterexpose == 'expose', // A tester
+      lieu_exposition: record.ObjLocation?.LocationString,
   };
 
   return {
@@ -195,6 +161,24 @@ function getArtworkFromJSON(record: any): Artwork {
     classification: record.Classification,
     source: record.source,
     image2,
-    img_url: url
+    img_url: url,
+    extra_images: extra_images
   };
+}
+
+function getImageURLFromImage2Field(image2: string): string {
+    if (image2 == null) {
+      image2 = 'noimage/pas-dimage-white.png';
+    } else if (image2.startsWith('Icono\\iconotheque\\')) {
+      image2 = image2.replace('Icono\\iconotheque\\', 'img/iconotheque\\');
+    } else if (image2.startsWith('\\vm-iconopat\\ICONOTHEQUE\\')) {
+      image2 = image2.replace('\\vm-iconopat\\ICONOTHEQUE\\', 'img/ICONOTHEQUE\\');
+    } else if (image2.startsWith('Icono\\iconomedia\\')) {
+      image2 = image2.replace('Icono\\iconomedia\\', 'img/iconomedia\\');
+    } else if (image2.startsWith('Objets\\')) {
+      image2 = image2.replace('Objets\\', 'img/media\\');
+    } else {
+      image2 = 'noimage/pas-dimage-white.png';
+    }
+    return `https://collections.quaibranly.fr/ccImageProxy.ashx?filename=${image2}`;
 }

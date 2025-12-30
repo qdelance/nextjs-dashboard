@@ -28,6 +28,20 @@ export default async function ArtworkPage({
         alt="Artwork main picture"
       />
 
+      <div className="grid grid-cols-6 gap-4">
+      {
+        artwork.extra_images.map((image) => (
+          <img
+            src={`${image.url}&width=200`}
+            className=""
+            width={200}
+            height={200}
+            alt="Artwork main picture"
+          />
+        ))
+      }
+      </div>
+
       <h2 className="text-4xl font-bold text-heading">Champs de base</h2>
 
       <p>
