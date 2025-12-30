@@ -1,4 +1,4 @@
-import { Artwork, ArtworkImage, ArtworkTitle } from "@/app/lib/definitions-collcon";
+import { AncienNumero, Artwork, ArtworkImage, ArtworkTitle } from "@/app/lib/definitions-collcon";
 import { forEach } from "eslint-config-next";
 
 export async function fetchArtwork(
@@ -111,6 +111,24 @@ function getArtworkFromJSON(record: any): Artwork {
     }
   }
 
+  let anciens_numeros: AncienNumero[] = [];
+  if (record.ObjAltnum) {
+    if (Array.isArray(record.ObjAltnum)) {
+      for (const obj of record.ObjAltnum) {
+        anciens_numeros.push({
+          description: obj.Description,
+          numero: obj.Altnum,
+        })
+      }
+    } else {
+      anciens_numeros.push({
+        description: record.ObjAltnum.Description,
+        numero: record.ObjAltnum.Altnum,
+      })
+    }
+  }
+
+
   return {
     id: record.ccObjectID,
     titles: titles,
@@ -132,7 +150,7 @@ function getArtworkFromJSON(record: any): Artwork {
     dimensions: record.Dimensions,
     signature: record.Signed,
     inscription: record.Inscribed,
-    // TODO obj_altnum
+    anciens_numeros
   };
 }
 

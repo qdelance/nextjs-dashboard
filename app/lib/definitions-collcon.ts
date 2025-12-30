@@ -24,9 +24,9 @@ sort
   "alpha"*/
 
 // ObjAltnum
-export type object_altnum = {
+export type AncienNumero = {
   description: string; // Description
-  altnum: string; // Altnum
+  numero: string; // Altnum
 }
 
 export type Artwork = {
@@ -52,7 +52,7 @@ export type Artwork = {
   dimensions: string,
   signature: string,
   inscription: string,
-  obj_altnum?: object_altnum[];
+  anciens_numeros?: AncienNumero[];
 };
 
 export type ArtworkTitle = {

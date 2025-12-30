@@ -16,8 +16,8 @@ export default async function ArtworkPage({
       <h1 className="text-5xl font-bold text-heading"><strong>{artwork.titles[0].type} : </strong>{artwork.titles[0].title}</h1>
 
       {/*
-        artwork.titles.slice(1).map((title) => (
-          <p><strong>{title.type}</strong> : {title.title}</p>
+        artwork.titles.slice(1).map((title, idx) => (
+          <p key={`t-${idx}`}><strong>{title.type}</strong> : {title.title}</p>
         ))
       */}
       <img
@@ -30,8 +30,9 @@ export default async function ArtworkPage({
 
       <div className="grid grid-cols-6 gap-4">
       {
-        artwork.extra_images.map((image) => (
+        artwork.extra_images.map((image, idx) => (
           <img
+            key={`image-${idx}`}
             src={`${image.url}&width=200`}
             className=""
             width={200}
@@ -45,8 +46,8 @@ export default async function ArtworkPage({
       <h2 className="text-4xl font-bold text-heading">1. Présentation globale</h2>
 
       {
-        artwork.titles.map((title) => (
-          <p><strong>{title.type} : </strong>{title.title}</p>
+        artwork.titles.map((title, idx) => (
+          <p key={`title-${idx}`}><strong>{title.type} : </strong>{title.title}</p>
         ))
       }
 
@@ -104,6 +105,18 @@ export default async function ArtworkPage({
 
       <p>
         <strong>Inscription : </strong>{artwork.inscription}
+      </p>
+
+
+      <h3 className="text-2xl font-bold text-heading">Provenance</h3>
+
+      <p>
+        <strong>Anciens numéros : </strong>
+        {
+          artwork.anciens_numeros?.map((ancien_numero, idx) => (
+            <p key={`num-${idx}`}>{ancien_numero.description} : {ancien_numero.numero}</p>
+          ))
+        }
       </p>
 
       <button
